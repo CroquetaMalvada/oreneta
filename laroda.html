@@ -1,0 +1,113 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<title>La Roda</title> 
+<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAAuvAXPRXL9qkzO0R8vzYpOhQ_BAnb8hQeSCQ2aBH79hHa1YbW_RQNN9ClKXG21xQObiXJ7diAAYaywg"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="jquery.mobile.12.css" />
+<link rel="stylesheet" href="estil.css.min.css" />
+<link rel="stylesheet" href="glyphish.css" /><!-- http://jsfiddle.net/vh4Ca/62/ -->
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/cordova-2.3.0.js"></script>
+<style type="text/css">
+</style>
+<script type="text/javascript"> 
+	$calendarfeed ="http://www.fundaciolaroda.cat/ca/noticies.xml"; 
+	$(document).ready(function(){ 
+		//load local storage feeds 
+		loadFeed($calendarfeed); 
+	}); 
+
+	//FUNCS 
+
+
+	function loadFeed(url) { 
+		var rnd=0; 
+		$(document.body).append('<div  data-role="page" id="results'+rnd+'" data-theme="a">'+$("#results").html()+'</div>'); 
+
+		var feed = new google.feeds.Feed(url); 
+		feed.setNumEntries(30); 
+		feed.load(function(result) { 
+			if (!result.error) { 
+				$("#results"+rnd+" .resultscontent").append('<div data-role="controlgroup" class="articlelist"></div>'); 
+				for (var i = 0; i < result.feed.entries.length; i++) { 
+					$("#results"+rnd+" .resultscontent .articlelist").append('<input data-theme="a" data-icon="arrow-r" data-iconpos="right" onclick=\'showArticle("'+escape(result.feed.entries[i].title)+'","'+escape(result.feed.entries[i].link)+'","'+escape(result.feed.entries[i].content)+'")\' type="button" value="' + result.feed.entries[i].title.replace(/"/g, "'") + '" />'); 
+				} 
+				$("#results"+rnd+" .feedtitle").html("La Roda"); 
+				$.mobile.changePage($("#results"+rnd),"slide",false,true); 
+				$("#results"+rnd).append('<div data-role="footer" data-position="fixed"><div data-role="navbar" class="nav-glyphish-example" data-grid="c"> <ul> <li><a href="index.html" rel="external" id="inici" data-transition="slide" data-icon="custom">Inici</a></li> <li><a href="laroda.html#results0" rel="external" id="blog" data-transition="slide" data-icon="custom">La Roda</a></li> <li><a href="rodamons.html#results0" rel="external" id="laroda" data-transition="slide" data-icon="custom">RODAmons</a></li> <li><a href="agenda.html#results" rel="external" id="events" data-transition="slide" data-icon="custom">Agenda</a></li> </ul> </div></div><link rel="stylesheet" href="glyphish.css" /><link rel="stylesheet" href="jquery.mobile.12.css" /><link rel="stylesheet" href="estil.css.min.css" />').trigger("create");
+			} 
+			else 
+				alert('feed error'); 
+		}); 
+	} 
+
+	function showArticle(title, url, desc){ 
+		if (typeof desc=="undefined") 
+			desc="(No description provided)"; 
+		$("#article .articleinfo").html("<p>"+unescape(title)+"</p><p>"+unescape(desc)+"</p><p><a target=\"_blank\" href=\""+unescape(url)+"\">"+unescape(url)+"</a></p>"); 
+		$.mobile.changePage("#article","slide",false,true); 
+	} 
+
+
+	function HtmlEncode(html) { 
+	return $('<div/>').text(html).html(); 
+	} 
+
+	function HtmlDecode(text) { 
+		return $('<div/>').html(text).text(); 
+	} 
+
+	//google feeds api 
+	google.load("feeds", "1"); 
+	function OnLoad() {} 
+	google.setOnLoadCallback(OnLoad); 
+</script> 
+<script src="js/jquery.mobile-1.1.1.min.js"></script> 
+</head> 
+<body> 
+<div data-role="page" data-theme="a" id="main"> 
+<div data-role="header"><h1>Carregant...</h1></div> 
+
+<div data-role="content" data-theme="a" align="center"> 
+<img src="images/carregant.gif"/>
+<div data-role="controlgroup" id="yourfeeds"> 
+</div> 
+
+<div data-role="controlgroup"> 
+
+
+
+</div> 
+</div> 
+</div> 
+
+<!-- resultats de la busqueda --> 
+<div id="results" data-theme="a"> 
+	<div data-role="header" data-position="fixed"><h1 class="feedtitle"></h1></div> 
+
+	<div data-role="content" class="resultscontent"> 
+		
+	</div> 
+
+</div> 
+<!-- dades del event --> 
+
+<div data-role="page" data-theme="a" id="article" data-add-back-btn="true"  data-back-btn-text="Torna" > 
+	<div data-role="header" data-position="fixed"><h1></h1></div> 
+
+	<div data-role="content" class="articleinfo"></div> 
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar" class="nav-glyphish-example" data-grid="c"> 
+				<ul> 
+					<li><a href="index.html" rel="external" id="inici" data-transition="slide" data-icon="custom">Inici</a></li> 
+					<li><a href="laroda.html#results0" rel="external" id="blog" data-transition="slide" data-icon="custom">La Roda</a></li> 
+					<li><a href="rodamons.html#results0" rel="external" id="laroda" data-transition="slide" data-icon="custom">RODAmons</a></li> 
+					<li><a href="agenda.html#results" rel="external" id="events" data-transition="slide" data-icon="custom">Agenda</a></li> 
+				</ul> 
+			</div> 
+		</div>
+</div> 
+
+</body> 
+</html>

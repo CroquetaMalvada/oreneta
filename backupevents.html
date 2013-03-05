@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+<meta charset="utf-8" />
+<title>BLOG</title> 
+<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAAuvAXPRXL9qkzO0R8vzYpOhQ_BAnb8hQeSCQ2aBH79hHa1YbW_RQNN9ClKXG21xQObiXJ7diAAYaywg"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="jquery.mobile.12.css" />
+<link rel="stylesheet" href="glyphish.css" /><!-- http://jsfiddle.net/vh4Ca/62/ -->
+<script src="jquery-1.8.3.min.js"></script>
+<script src="cordova-2.2.0.js"></script>
+<script type="text/javascript"> 
+	
+	
+	$(document).ready(function(){
+	  $.ajax({
+		type: "GET",
+		url: "mirar.php",
+		dataType: "xml",
+		success: parseXml
+	  });
+
+	});
+
+	function parseXml(xml)	{
+		rnd=Math.floor(Math.random()*10000000); 
+	  	$(document.body).append('<div  style="background-image:url(images/fondo.png);" data-role="page" id="results'+rnd+'" data-theme="a">'+$("#results").html()+'</div>'); 
+		$("#results"+rnd+" .resultscontent").append('<div data-role="controlgroup" class="articlelist"></div>');
+		titol=Array();
+		desc=Array();
+		lloc=Array();
+		var d=0;
+	    //por cada elemento entry creame un boton
+		$(xml).find("entry").each(function(){
+			titol.push($(this).find("titulo").text());
+			desc.push($(this).find("descripcion").text());
+			lloc.push($(this).find("lugar").text());
+			$("#results"+rnd+" .resultscontent .articlelist").append('<input data-theme="a" data-icon="arrow-r" data-iconpos="right" onclick=\'showArticle("'+$(this).find("enlace").text()+'","'+d+'","'+$(this).find("hora").text()+'","'+$(this).find("fecha").text()+'")\' type="button" value="'+$(this).find("titulo").text()+'" />'); 
+			d++;
+		});
+		$("#results"+rnd+" .feedtitle").html("Events"); 
+		$.mobile.changePage($("#results"+rnd),"slide",false,true);  
+	}
+	
+	
+	function showArticle(url,n,hora,fecha){ 
+		$("#article .articleinfo").html("<h1>"+titol[n]+"</h1><h4>"+desc[n]+"</h4><h3>L'event tindrà lloc a: "+lloc[n]+" el dia <b>"+fecha+"</b> a les <b>"+hora+"</b></h3><br/><a target=\"_blank\" href=\""+url+"\">Més informació...</a>"); 
+		$.mobile.changePage("#article","slide",false,true); 
+
+	}
+	
+
+</script> 
+<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script> 
+</head> 
+<body> 
+<div data-role="page" data-theme="a" id="main" style="background-image:url('images/fondo.png');"> 
+	<div data-role="header"><h1>Carregant...</h1></div> 
+
+	<div data-role="content"> 
+		<div data-role="controlgroup" id="yourfeeds"> 
+		</div> 
+
+		<div data-role="controlgroup"> 
+		</div> 
+	</div> 
+</div> 
+
+<!-- placeolder for feed template --> 
+<div id="results" data-theme="a"> 
+	<div data-role="header"><h1 class="feedtitle"></h1></div> 
+
+	<div data-role="content" class="resultscontent"> 
+	</div> 
+	<div data-role="footer" data-position="fixed">
+			<div data-role="navbar" class="nav-glyphish-example" data-grid="c"> 
+				<ul> 
+					<li><a href="index.html" rel="external" id="inici" data-transition="slide" data-icon="custom">Inici</a></li> 
+					<li><a href="blog.html" rel="external" id="blog" data-transition="slide" data-icon="custom">Blog</a></li> 
+					<li><a href="bloglaroda.html" rel="external" id="laroda" data-transition="slide" data-icon="custom">Blog laroda</a></li> 
+					<li><a href="events.html" rel="external" id="events" data-transition="slide" data-icon="custom">Events</a></li> 
+				</ul> 
+			</div> 
+		</div>
+</div> 
+<!-- placeolder for feed template --> 
+
+<div  id="article" data-theme="b" data-add-back-btn="true" > 
+	<div data-role="header"><h1></h1></div> 
+
+	<div data-role="content" class="articleinfo"></div> 
+	<div data-role="footer" data-position="fixed">
+			<div data-role="navbar" class="nav-glyphish-example" data-grid="c"> 
+				<ul> 
+					<li><a href="index.html" rel="external" id="inici" data-transition="slide" data-icon="custom">Inici</a></li> 
+					<li><a href="blog.html" rel="external" id="blog" data-transition="slide" data-icon="custom">Blog</a></li> 
+					<li><a href="bloglaroda.html" rel="external" id="laroda" data-transition="slide" data-icon="custom">Blog laroda</a></li> 
+					<li><a href="events.html" rel="external" id="events" data-transition="slide" data-icon="custom">Events</a></li> 
+				</ul> 
+			</div> 
+		</div>
+</div> 
+
+</body> 
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+<title>BLOG</title> 
+<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAAuvAXPRXL9qkzO0R8vzYpOhQ_BAnb8hQeSCQ2aBH79hHa1YbW_RQNN9ClKXG21xQObiXJ7diAAYaywg"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="jquery.mobile.12.css" />
+<link rel="stylesheet" href="glyphish.css" /><!-- http://jsfiddle.net/vh4Ca/62/ -->
+<script src="jquery-1.8.3.min.js"></script>
+<script src="cordova-2.2.0.js"></script>
+<style type="text/css">
+</style>
+<script type="text/javascript"> 
+	$calendarfeed ="http://www.google.com/calendar/feeds/admin%40fundaciolaroda.cat/public/basic?sortorder=ascending"; 
+
+	//INIT 
+	$(document).bind("mobileinit", function(){ 
+		$.extend( $.mobile , { 
+			defaultTransition: "slide" 
+		}); 
+
+		//init local storage feeds 
+		if ( typeof localStorage["feeds"] == "undefined"){ 
+			restoreDefault(); 
+		} 
+	}); 
+
+	$(document).ready(function(){ 
+		//load local storage feeds 
+		loadFeed($calendarfeed); 
+	}); 
+
+	//FUNCS 
+
+
+	function loadFeed(url) { 
+		var rnd=Math.floor(Math.random()*10000000); 
+		$(document.body).append('<div  style="background-image:url(images/fondo.png);" data-role="page" id="results'+rnd+'" data-theme="a">'+$("#results").html()+'</div>'); 
+
+		var feed = new google.feeds.Feed(url); 
+		feed.setNumEntries(30); 
+		feed.load(function(result) { 
+			if (!result.error) { 
+				$("#results"+rnd+" .resultscontent").append('<div data-role="controlgroup" class="articlelist"></div>'); 
+				var fechas=document.getElementsByTagName("when");
+				for (var i = 0; i < result.feed.entries.length; i++) { 
+					console.log(result.feed.entries[i]);
+					var fecha=result.feed.entries[i].content.slice(10,30);
+					var mes=fecha.slice(0,3);
+					switch(mes){
+						case "Jan":mes=1;break;
+						case "Feb":mes=2;break;
+						case "Mar":mes=3;break;
+						case "Apr":mes=4;break;
+						case "May":mes=5;break;
+						case "Jun":mes=6;break;
+						case "Jul":mes=7;break;
+						case "Aug":mes=8;break;
+						case "Sep":mes=9;break;
+						case "Oct":mes=10;break;
+						case "Nov":mes=11;break;
+						case "Dec":mes=12;break;
+					}
+					var dia=fecha.slice(5,6);
+					if(isNaN(dia)){
+						var dia=fecha.slice(4,5);
+						var year=fecha.slice(7,11);
+						//var hora=fecha.slice(12,20);
+					}
+					else{
+						var dia=fecha.slice(4,6);
+						var year=fecha.slice(8,12);
+						//var hora=fecha.slice(13,20);
+					}
+					$("#results"+rnd+" .resultscontent .articlelist").append('<input data-theme="a" data-icon="arrow-r" data-iconpos="right" onclick=\'showArticle("'+escape(result.feed.entries[i].title)+'","'+escape(result.feed.entries[i].link)+'","'+escape(result.feed.entries[i].content)+'")\' type="button" value="' + result.feed.entries[i].title + '	'+dia+'-'+mes+'-'+year+' a les '+hora+'" />'); 
+				} 
+				$("#results"+rnd+" .feedtitle").html("Blog"); 
+				$.mobile.changePage($("#results"+rnd),"slide",false,true); 
+			} 
+			else 
+				alert('feed error'); 
+		}); 
+	} 
+
+	function showArticle(title, url, desc){ 
+		if (typeof desc=="undefined") 
+			desc="(No description provided)"; 
+		$("#article .articleinfo").html("<p>"+unescape(title)+"</p><p>"+unescape(desc)+"</p><p><a target=\"_blank\" href=\""+unescape(url)+"\">"+unescape(url)+"</a></p>"); 
+		$.mobile.changePage("#article","slide",false,true); 
+	} 
+
+
+	function HtmlEncode(html) { 
+	return $('<div/>').text(html).html(); 
+	} 
+
+	function HtmlDecode(text) { 
+		return $('<div/>').html(text).text(); 
+	} 
+
+	//google feeds api 
+	google.load("feeds", "1"); 
+	function OnLoad() {} 
+	google.setOnLoadCallback(OnLoad); 
+
+
+</script> 
+<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script> 
+</head> 
+<body> 
+<div data-role="page" data-theme="a" id="main" style="background-image:url('images/fondo.png');"> 
+<div data-role="header"><h1>Carregant...</h1></div> 
+
+<div data-role="content"> 
+<div data-role="controlgroup" id="yourfeeds"> 
+</div> 
+
+<div data-role="controlgroup"> 
+
+
+
+</div> 
+</div> 
+</div> 
+
+<!-- placeolder for feed template --> 
+<div id="results" data-theme="a"> 
+	<div data-role="header"><h1 class="feedtitle"></h1></div> 
+
+	<div data-role="content" class="resultscontent"> 
+	</div> 
+	<div data-role="footer" data-position="fixed">
+			<div data-role="navbar" class="nav-glyphish-example" data-grid="c"> 
+				<ul> 
+					<li><a href="index.html" rel="external" id="inici" data-transition="slide" data-icon="custom">Inici</a></li> 
+					<li><a href="blog.html" rel="external" id="blog" data-transition="slide" data-icon="custom">Blog</a></li> 
+					<li><a href="bloglaroda.html" rel="external" id="laroda" data-transition="slide" data-icon="custom">Blog laroda</a></li> 
+					<li><a href="events.html" rel="external" id="events" data-transition="slide" data-icon="custom">Events</a></li> 
+				</ul> 
+			</div> 
+		</div>
+</div> 
+<!-- placeolder for feed template --> 
+
+<div data-role="page" id="article" data-theme="b" data-add-back-btn="true" > 
+	<div data-role="header"><h1></h1></div> 
+
+	<div data-role="content" class="articleinfo"></div> 
+	<div data-role="footer" data-position="fixed">
+			<div data-role="navbar" class="nav-glyphish-example" data-grid="c"> 
+				<ul> 
+					<li><a href="index.html" rel="external" id="inici" data-transition="slide" data-icon="custom">Inici</a></li> 
+					<li><a href="blog.html" rel="external" id="blog" data-transition="slide" data-icon="custom">Blog</a></li> 
+					<li><a href="bloglaroda.html" rel="external" id="laroda" data-transition="slide" data-icon="custom">Blog laroda</a></li> 
+					<li><a href="events.html" rel="external" id="events" data-transition="slide" data-icon="custom">Events</a></li> 
+				</ul> 
+			</div> 
+		</div>
+</div> 
+
+</body> 
+</html>
